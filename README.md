@@ -1,1 +1,587 @@
-# school_fair_challenge
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>校園愛心園遊會：小小執行長的挑戰</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+
+        :root {
+            --brand-color: #ff6f00; /* Amber 900 */
+            --accent-color: #ffca28; /* Amber 400 */
+            --bg-color: #fff8e1;     /* Amber 50 */
+            --card-bg: #ffffff;
+            --text-color: #3e2723;   /* Brown 900 */
+            --success-color: #43a047;
+            --error-color: #d32f2f;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(62, 39, 35, 0.1);
+            position: relative;
+            padding-bottom: 80px;
+            overflow: hidden;
+        }
+
+        /* 裝飾性標題 */
+        h1 {
+            text-align: center;
+            color: var(--brand-color);
+            margin-bottom: 5px;
+            font-size: 2.2em;
+            font-weight: 900;
+            text-shadow: 2px 2px 0px rgba(255, 202, 40, 0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8d6e63;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* 進度條設計 */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            background: #fff;
+            padding: 10px 15px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .progress-label {
+            font-size: 0.9em;
+            font-weight: 900;
+            color: var(--brand-color);
+            margin-right: 15px;
+            white-space: nowrap;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            background-color: #ffecb3;
+            border-radius: 20px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--brand-color));
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 20px;
+        }
+
+        /* 情境區塊 */
+        .scenario-box {
+            background-color: #fff;
+            border: 3px solid #ffe082;
+            padding: 0;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            font-size: 1.15em;
+            line-height: 1.8;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        .scenario-image-container {
+            width: 100%;
+            height: 250px;
+            position: relative;
+            background-color: #eeeeee;
+            overflow: hidden;
+        }
+
+        .scenario-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s;
+        }
+
+        .scenario-image:hover {
+            transform: scale(1.02);
+        }
+
+        .scenario-content {
+            padding: 30px;
+            background: linear-gradient(to bottom, #ffffff, #fffde7);
+        }
+
+        .scenario-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            border-bottom: 2px dashed #ffe082;
+            padding-bottom: 15px;
+        }
+
+        .scenario-title {
+            font-weight: 900;
+            color: var(--brand-color);
+            font-size: 1.4em;
+        }
+
+        /* 題目卡片 */
+        .question-card {
+            background-color: #fff;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            border: 2px solid #f5f5f5;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .question-card:focus-within {
+            border-color: var(--brand-color);
+            box-shadow: 0 8px 20px rgba(255, 111, 0, 0.15);
+            transform: translateY(-3px);
+            z-index: 10;
+        }
+
+        .question-text {
+            font-weight: 700;
+            font-size: 1.15em;
+            margin-bottom: 15px;
+            display: block;
+            color: #4e342e;
+        }
+
+        .point-badge {
+            display: inline-block;
+            background-color: var(--text-color);
+            color: #fff;
+            font-size: 0.75em;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 10px;
+            vertical-align: middle;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 16px;
+            margin-top: 5px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+            background-color: #fafafa;
+            transition: all 0.3s;
+            -webkit-appearance: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--brand-color);
+            background-color: #fff;
+            outline: none;
+        }
+
+        /* 按鈕 */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff8f00, #ff6f00);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.3em;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: transform 0.1s, box-shadow 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 111, 0, 0.3);
+            user-select: none;
+            letter-spacing: 1px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 10px rgba(255, 111, 0, 0.2);
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #43a047, #2e7d32);
+            box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
+            display: none;
+        }
+        
+        /* 回饋與結果 */
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .correct {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            border-left: 6px solid var(--success-color);
+        }
+
+        .incorrect {
+            background-color: #ffebee;
+            color: #b71c1c;
+            border-left: 6px solid var(--error-color);
+        }
+
+        .result-screen {
+            text-align: center;
+            display: none;
+            padding: 40px 20px;
+        }
+
+        .score-display {
+            font-size: 5em;
+            font-weight: 900;
+            color: var(--brand-color);
+            margin: 20px 0;
+            text-shadow: 4px 4px 0px rgba(255, 202, 40, 0.2);
+        }
+
+        .badge {
+            font-size: 8em;
+            margin-bottom: 20px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; border-radius: 0; min-height: 100vh; }
+            h1 { font-size: 1.8em; }
+            .scenario-image-container { height: 200px; }
+            .btn { font-size: 1.1em; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="quiz-screen">
+        <h1>🏫 校園愛心園遊會</h1>
+        <p class="subtitle">小小執行長的終極挑戰任務</p>
+        
+        <div class="progress-container">
+            <span class="progress-label" id="progress-text">Level 1/10</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- 題目內容動態載入 -->
+        </div>
+
+        <button class="btn" id="submit-btn" onclick="checkAnswers()">送出決策</button>
+        <button class="btn btn-next" id="next-btn" onclick="nextQuestion()">進入下一階段 ➔</button>
+    </div>
+
+    <div id="result-screen" class="result-screen">
+        <div class="badge" id="result-badge">🏅</div>
+        <h2 style="color: #3e2723; margin-bottom: 10px; font-size: 2em;">執行長任務報告</h2>
+        <p style="font-size: 1.2em; color: #795548;">你的最終得分是：</p>
+        <div class="score-display" id="final-score">0 / 100</div>
+        <p id="result-comment" style="font-size: 1.4em; font-weight: bold; color: var(--brand-color); margin-bottom: 40px;"></p>
+        <button class="btn" onclick="location.reload()">重新挑戰園遊會</button>
+    </div>
+</div>
+
+<script>
+    // 題目資料庫 (連貫故事：校園愛心園遊會)
+    // 終極難度：無提示、需邏輯推理、多步驟計算
+    const quizData = [
+        {
+            title: "階段一：班級基金的盤點",
+            image: "https://images.unsplash.com/photo-1580519542369-3438e12d193e?auto=format&fit=crop&w=800&q=80",
+            story: "你是園遊會的執行長小明，首先要清點班上的啟動基金。保險箱裡有千元鈔票、百元鈔票和十元硬幣。<br>已知條件如下：<br>1. 「千元鈔票」的張數是 5 張。<br>2. 「百元鈔票」的總價值，剛好等於 3 張千元鈔票的價值。<br>3. 「十元硬幣」的總價值，剛好是 1 張百元鈔票的一半。",
+            questions: [
+                { text: "請問保險箱裡，「百元鈔票」共有幾張？", answer: "30", type: "number" },
+                { text: "請問保險箱裡，「十元硬幣」共有幾個？", answer: "5", type: "number" },
+                { text: "請計算班級基金的「總金額」是多少元？", answer: "8050", type: "number" }
+            ]
+        },
+        {
+            title: "階段二：特調飲品的研發",
+            image: "https://images.unsplash.com/photo-1544145945-f90425340c7e?auto=format&fit=crop&w=800&q=80",
+            story: "為了吸引顧客，你研發了一款「彩虹氣泡飲」。<br>這款飲料的調配比例非常嚴格：<br>● 基底紅茶：2 公升。<br>● 鮮奶：用量剛好是紅茶的一半。<br>● 神秘糖漿：150 毫升。<br>你要將這些材料全部倒入一個容量為 3 公升的大壺中攪拌。",
+            questions: [
+                { text: "請問鮮奶的用量是多少毫升？", answer: "1000", type: "number" },
+                { text: "將紅茶、鮮奶、糖漿混合後，飲料的總體積是多少毫升？", answer: "3150", type: "number" },
+                { text: "將調好的飲料倒入大壺後，會溢出多少毫升？", answer: "150", type: "number" }
+            ]
+        },
+        {
+            title: "階段三：獎品的採購策略",
+            image: "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=800&q=80",
+            story: "你要去批發市場購買套圈圈遊戲的獎品。預算上限是 5000 元。<br>老闆報價如下：<br>● A 方案：購買 3 隻大熊玩偶，總共要價 2400 元。<br>● B 方案：購買 1 隻機器人，要價 1500 元。<br>你決定購買「2 隻大熊玩偶」和「2 隻機器人」。",
+            questions: [
+                { text: "請問 1 隻大熊玩偶的單價是多少元？", answer: "800", type: "number" },
+                { text: "請問購買上述決定好的獎品，總共需要支付多少元？", answer: "4600", type: "number" },
+                { text: "結帳後，你的預算還剩下多少元？", answer: "400", type: "number" }
+            ]
+        },
+        {
+            title: "階段四：手工餅乾的銷售",
+            image: "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=800&q=80",
+            story: "園遊會開始了！手工餅乾攤位傳來捷報。<br>上午賣出了 15 包餅乾。<br>下午雖然人潮變少，賣出的數量比上午少了 5 包。<br>結算時發現，整天賣餅乾的「總收入」是 2500 元。",
+            questions: [
+                { text: "請問下午賣出了幾包餅乾？", answer: "10", type: "number" },
+                { text: "請問整天總共賣出了幾包餅乾？", answer: "25", type: "number" },
+                { text: "請推算一包手工餅乾的售價是多少元？", answer: "100", type: "number" }
+            ]
+        },
+        {
+            title: "階段五：補水站的容器選擇",
+            image: "https://images.unsplash.com/photo-1521406830500-1c0b3b49914c?auto=format&fit=crop&w=800&q=80",
+            story: "天氣炎熱，你需要緊急支援補水站。倉庫裡有三個水桶，標籤有些磨損，依稀可見：<br>● A 桶：容量 2050 毫升。<br>● B 桶：容量 2 公升 80 毫升。<br>● C 桶：容量 2 公升，但之前破洞漏掉了 50 毫升。",
+            questions: [
+                { text: "請將 B 桶的容量換算成毫升。", answer: "2080", type: "number" },
+                { text: "請計算 C 桶現在實際剩餘的容量是多少毫升？", answer: "1950", type: "number" },
+                { text: "請問哪一個桶子的容量最大？", answer: "B", type: "text" }
+            ]
+        },
+        {
+            title: "階段六：摸彩券的神祕號碼",
+            image: "https://images.unsplash.com/photo-1606166325683-e6ebea472e39?auto=format&fit=crop&w=800&q=80",
+            story: "活動高潮是幸運摸彩！摸彩券的編號是從 1001 號開始發放，一直發到 1050 號。<br>中獎規則很特殊：<br>「十位數必須是 3，且個位數必須是奇數。」<br>符合這兩個條件的號碼才能領獎。",
+            questions: [
+                { text: "在所有發出的號碼中，最小的中獎號碼是多少？", answer: "1031", type: "number" },
+                { text: "在所有發出的號碼中，最大的中獎號碼是多少？", answer: "1039", type: "number" },
+                { text: "請問總共有幾位幸運兒可以領獎？", answer: "5", type: "number" }
+            ]
+        },
+        {
+            title: "階段七：飲料分裝的難題",
+            image: "https://images.unsplash.com/photo-1546173159-315724a31696?auto=format&fit=crop&w=800&q=80",
+            story: "攤位上剩下了兩壺果汁。<br>● 甲壺：還有 1 公升 500 毫升。<br>● 乙壺：還有 900 毫升。<br>為了方便收拾，你要把甲壺裡面「一半」的果汁倒進乙壺裡。",
+            questions: [
+                { text: "請問倒進乙壺的果汁是多少毫升？", answer: "750", type: "number" },
+                { text: "倒完之後，乙壺現在總共有多少毫升的果汁？", answer: "1650", type: "number" },
+                { text: "倒完之後，現在乙壺比甲壺多了多少毫升？", answer: "900", type: "number" }
+            ]
+        },
+        {
+            title: "階段八：愛心捐款的目標",
+            image: "https://images.unsplash.com/photo-1579621970563-ebec7560eb3e?auto=format&fit=crop&w=800&q=80",
+            story: "這次園遊會的目標是捐款 8000 元給孤兒院。<br>會計同學正在計算目前的利潤：<br>● 上午利潤：3200 元。<br>● 下午利潤：只有上午利潤的一半。<br>大家都很緊張，不知道有沒有達成目標。",
+            questions: [
+                { text: "請問下午的利潤是多少元？", answer: "1600", type: "number" },
+                { text: "請問整天下來的總利潤是多少元？", answer: "4800", type: "number" },
+                { text: "距離 8000 元的捐款目標，還差多少元？", answer: "3200", type: "number" }
+            ]
+        },
+        {
+            title: "階段九：外送訂單的路線",
+            image: "https://images.unsplash.com/photo-1586769852044-692d6e3703f0?auto=format&fit=crop&w=800&q=80",
+            story: "活動結束後，你要幫忙送最後一批愛心便當。<br>路線規劃如下：<br>1. 從學校出發，騎 1 公里 200 公尺到達社區中心。<br>2. 接著從社區中心出發，騎 850 公尺到達養老院。<br>3. 送完後，原路折返回到學校。",
+            questions: [
+                { text: "請問從學校到社區中心的距離是多少公尺？", answer: "1200", type: "number" },
+                { text: "從學校出發，經過社區中心到養老院，單趟總共騎了多少公尺？", answer: "2050", type: "number" },
+                { text: "請問完成這趟送餐任務回到學校，總共騎了多少公尺？", answer: "4100", type: "number" }
+            ]
+        },
+        {
+            title: "階段十：最終結算大考驗",
+            image: "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=800&q=80",
+            story: "終於到了最後結算時刻！請你拿出計算機般的大腦。<br>● 總營業額(收入)：9500 元。<br>● 成本支出：食材費 3000 元、場地佈置費 1500 元。<br>全班決定將「所有的淨利潤」都捐出去。",
+            questions: [
+                { text: "請計算這次園遊會的總成本是多少元？", answer: "4500", type: "number" },
+                { text: "請問扣除成本後，最後捐出的淨利潤是多少元？", answer: "5000", type: "number" },
+                { text: "如果隔壁班的捐款目標是 6000 元，你們班的捐款比他們少了多少元？", answer: "1000", type: "number" }
+            ]
+        }
+    ];
+
+    let currentSetIndex = 0;
+    let score = 0;
+
+    function loadQuiz() {
+        const content = document.getElementById('quiz-content');
+        const progressBar = document.getElementById('progress');
+        const progressText = document.getElementById('progress-text');
+        const set = quizData[currentSetIndex];
+
+        // 更新進度條
+        const progressPercent = ((currentSetIndex) / quizData.length) * 100;
+        progressBar.style.width = progressPercent + '%';
+        progressText.innerText = `Mission ${currentSetIndex + 1}/${quizData.length}`;
+
+        // 載入題目 HTML
+        let html = `
+            <div class="scenario-box">
+                <div class="scenario-image-container">
+                    <img src="${set.image}" class="scenario-image" alt="情境圖示" onerror="this.src='https://via.placeholder.com/800x400?text=Image+Load+Error'">
+                </div>
+                <div class="scenario-content">
+                    <div class="scenario-header">
+                        <div class="scenario-title">${set.title}</div>
+                    </div>
+                    ${set.story}
+                </div>
+            </div>
+        `;
+
+        set.questions.forEach((q, index) => {
+            // 配分邏輯：第1、2題各3分，第3題4分
+            let pts = 3;
+            if (index === 2) pts = 4;
+
+            html += `
+                <div class="question-card" id="card-${index}">
+                    <label class="question-text">
+                        Q${index+1}. ${q.text} 
+                        <span class="point-badge">${pts} 分</span>
+                    </label>
+                    <input type="text" id="answer-${index}" placeholder="請輸入答案..." autocomplete="off">
+                    <div class="feedback" id="feedback-${index}"></div>
+                </div>
+            `;
+        });
+
+        content.innerHTML = html;
+        document.getElementById('submit-btn').style.display = 'block';
+        document.getElementById('next-btn').style.display = 'none';
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 清理輸入字串 (移除單位、空格、逗號)
+    function cleanInput(str) {
+        if(!str) return "";
+        let s = str.toString().replace(/\s+/g, ''); // 移除空格
+        s = s.replace(/，/g, ','); // 全形逗號轉半形
+        s = s.replace(/(元|公升|毫升|公尺|公分|公里|公斤|公克|點|人|箱|盞|顆|張|個|發|時|分|點|隻|包|號|位)/g, ''); // 移除常見中文單位
+        return s.toUpperCase();
+    }
+
+    function checkAnswers() {
+        const set = quizData[currentSetIndex];
+        
+        set.questions.forEach((q, index) => {
+            const inputEl = document.getElementById(`answer-${index}`);
+            const userInput = inputEl.value;
+            const feedbackEl = document.getElementById(`feedback-${index}`);
+            
+            const cleanedUserAnswer = cleanInput(userInput);
+            const cleanedCorrectAnswer = cleanInput(q.answer);
+
+            let isCorrect = false;
+            // 檢查邏輯：直接相等 或 移除逗號後相等
+            if (cleanedUserAnswer === cleanedCorrectAnswer) {
+                isCorrect = true;
+            } 
+            else if (cleanedUserAnswer.replace(/,/g, '') === cleanedCorrectAnswer.replace(/,/g, '')) {
+                isCorrect = true;
+            }
+
+            // 配分計算
+            let points = 3;
+            if (index === 2) points = 4;
+
+            if (isCorrect) {
+                feedbackEl.innerHTML = `✅ 決策正確！ (+${points}分)`;
+                feedbackEl.className = "feedback correct";
+                feedbackEl.style.display = "block";
+                score += points;
+            } else {
+                feedbackEl.innerHTML = `❌ 決策失誤！正確數據是：${q.answer}`;
+                feedbackEl.className = "feedback incorrect";
+                feedbackEl.style.display = "block";
+            }
+            
+            // 鎖定輸入框
+            inputEl.disabled = true;
+        });
+
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentSetIndex++;
+        if (currentSetIndex < quizData.length) {
+            loadQuiz();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById('quiz-screen').style.display = 'none';
+        document.getElementById('result-screen').style.display = 'block';
+        
+        const finalScoreEl = document.getElementById('final-score');
+        const commentEl = document.getElementById('result-comment');
+        const badgeEl = document.getElementById('result-badge');
+
+        const maxScore = 100;
+        finalScoreEl.innerText = `${score} / ${maxScore}`;
+
+        if (score >= 90) {
+            badgeEl.innerText = "🏆";
+            commentEl.innerText = "太神了！你是傳說級的執行長！";
+        } else if (score >= 80) {
+            badgeEl.innerText = "🥇";
+            commentEl.innerText = "非常優秀！園遊會大獲成功！";
+        } else if (score >= 60) {
+            badgeEl.innerText = "🥈";
+            commentEl.innerText = "做得不錯！成本控制可以再加強！";
+        } else {
+            badgeEl.innerText = "💪";
+            commentEl.innerText = "別灰心，累積經驗，下次會更好！";
+        }
+    }
+
+    // 初始化
+    loadQuiz();
+
+</script>
+
+</body>
+</html>
